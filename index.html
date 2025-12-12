@@ -1,0 +1,447 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Miss long✨六级专属祝福</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', '微软雅黑', sans-serif;
+        }
+
+        body {
+            overflow: hidden;
+            background: #000;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* 粒子背景容器 */
+        #particle-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* 主祝福容器 */
+        .blessing-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* 3D标题 */
+        .main-title {
+            font-size: clamp(24px, 8vw, 56px);
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #fff;
+            text-shadow: 0 0 10px #ff69b4, 0 0 20px #00bfff, 0 0 30px #ffd700;
+            transform-style: preserve-3d;
+            animation: titleFloat 6s ease-in-out infinite, glow 3s ease-in-out infinite alternate;
+            letter-spacing: 2px;
+        }
+
+        /* 分段祝福卡片 */
+        .blessing-cards {
+            width: 100%;
+            max-width: 800px;
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .blessing-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            transform-style: preserve-3d;
+            animation: cardPop 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(30px) rotateX(10deg);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 卡片流光效果 */
+        .blessing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shine 3s linear infinite;
+        }
+
+        .blessing-card:nth-child(1) { animation-delay: 0.2s; }
+        .blessing-card:nth-child(2) { animation-delay: 0.4s; }
+        .blessing-card:nth-child(3) { animation-delay: 0.6s; }
+        .blessing-card:nth-child(4) { animation-delay: 0.8s; }
+        .blessing-card:nth-child(5) { animation-delay: 1.0s; }
+        .blessing-card:nth-child(6) { animation-delay: 1.2s; }
+
+        .card-text {
+            font-size: clamp(14px, 4vw, 20px);
+            font-weight: 600;
+            color: #fff;
+            text-align: center;
+            background: linear-gradient(45deg, #ff69b4, #00bfff, #ffd700, #32cd32);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientFlow 8s ease infinite;
+            transform: translateZ(10px);
+        }
+
+        /* 底部总结语 */
+        .final-blessing {
+            font-size: clamp(16px, 5vw, 24px);
+            font-weight: 800;
+            text-align: center;
+            margin-top: 20px;
+            background: linear-gradient(135deg, #ff8a00, #e52e71, #9b59b6, #3498db);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientFlow 6s ease infinite, breathe 4s ease-in-out infinite;
+            transform: translateZ(20px);
+        }
+
+        /* 点击提示 */
+        .click-tip {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            animation: fade 2s ease-in-out infinite alternate;
+            z-index: 20;
+        }
+
+        /* 烟花弹窗 */
+        .firework-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(15px);
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transform: scale(0);
+            animation: modalPop 0.6s ease-out forwards;
+            box-shadow: 0 0 50px rgba(255, 105, 180, 0.5);
+        }
+
+        .modal-text {
+            font-size: clamp(18px, 5vw, 28px);
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ffd700, #ff69b4, #00ff99);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientFlow 4s ease infinite;
+        }
+
+        .close-btn {
+            padding: 10px 30px;
+            background: linear-gradient(45deg, #ff69b4, #00bfff);
+            border: none;
+            border-radius: 50px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+        }
+
+        .close-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.6);
+        }
+
+        /* 动画定义 */
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0) rotateX(5deg) rotateY(-5deg); }
+            50% { transform: translateY(-15px) rotateX(-5deg) rotateY(5deg); }
+        }
+
+        @keyframes glow {
+            0% { text-shadow: 0 0 10px #ff69b4, 0 0 20px #00bfff, 0 0 30px #ffd700; }
+            100% { text-shadow: 0 0 15px #ff69b4, 0 0 25px #00bfff, 0 0 35px #ffd700, 0 0 45px #32cd32; }
+        }
+
+        @keyframes cardPop {
+            0% { opacity: 0; transform: translateY(30px) rotateX(10deg); }
+            100% { opacity: 1; transform: translateY(0) rotateX(0); }
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes breathe {
+            0% { transform: translateZ(20px) scale(1); }
+            50% { transform: translateZ(20px) scale(1.05); }
+            100% { transform: translateZ(20px) scale(1); }
+        }
+
+        @keyframes fade {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0); }
+            70% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* 适配移动端 */
+        @media (max-width: 768px) {
+            .blessing-cards {
+                gap: 10px;
+            }
+            .blessing-card {
+                padding: 15px;
+            }
+            .modal-content {
+                padding: 30px 20px;
+                margin: 0 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 粒子背景 -->
+    <div id="particle-container"></div>
+
+    <!-- 主祝福内容 -->
+    <div class="blessing-wrapper">
+        <h1 class="main-title">Miss long 🎓 CET-6 Blessing</h1>
+
+        <div class="blessing-cards">
+            <div class="blessing-card">
+                <p class="card-text">听力如行云 ✨ Listening goes smoothly</p>
+            </div>
+            <div class="blessing-card">
+                <p class="card-text">阅读皆秒杀 🚀 Reading is a breeze</p>
+            </div>
+            <div class="blessing-card">
+                <p class="card-text">写作若天成 ✍️ Writing is flawless</p>
+            </div>
+            <div class="blessing-card">
+                <p class="card-text">翻译无瑕疵 📝 Translation is perfect</p>
+            </div>
+            <div class="blessing-card">
+                <p class="card-text">高分稳上岸 🎯 High score guaranteed</p>
+            </div>
+            <div class="blessing-card">
+                <p class="card-text">前程皆璀璨 🌟 Future is brilliant</p>
+            </div>
+        </div>
+
+        <h2 class="final-blessing">
+            Miss long · 六级必过<br>
+            All dreams come true ✨
+        </h2>
+    </div>
+
+    <!-- 点击提示 -->
+    <div class="click-tip">✨ 点击屏幕解锁专属烟花祝福 ✨</div>
+
+    <!-- 烟花弹窗 -->
+    <div class="firework-modal" id="fireworkModal">
+        <div class="modal-content">
+            <p class="modal-text">🎉 Miss long 🎉<br>
+            六级高分过线<br>
+            CET-6 with flying colors!</p>
+            <button class="close-btn" onclick="closeModal()">收下祝福 ✨</button>
+        </div>
+    </div>
+
+    <script>
+        // 粒子背景生成 - 修正JS类写法
+        class Particle {
+            constructor() {
+                this.x = Math.random() * window.innerWidth;
+                this.y = Math.random() * window.innerHeight;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.5 - 0.25;
+                this.color = `rgba(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.random()*0.8})`;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x < 0 || this.x > window.innerWidth) this.speedX = -this.speedX;
+                if (this.y < 0 || this.y > window.innerHeight) this.speedY = -this.speedY;
+            }
+
+            draw(ctx) {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
+
+        let particles = [];
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        document.getElementById('particle-container').appendChild(canvas);
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < 150; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw(ctx);
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        // 屏幕点击触发烟花和弹窗
+        document.addEventListener('click', (e) => {
+            createFirework(e.clientX, e.clientY);
+            setTimeout(() => {
+                document.getElementById('fireworkModal').style.display = 'flex';
+            }, 800);
+        });
+
+        // 关闭弹窗
+        function closeModal() {
+            document.getElementById('fireworkModal').style.display = 'none';
+        }
+
+        // 创建烟花效果
+        function createFirework(x, y) {
+            const colors = ['#ff69b4', '#00bfff', '#ffd700', '#32cd32', '#9b59b6', '#ff8a00'];
+            const particleCount = 150;
+
+            for (let i = 0; i < particleCount; i++) {
+                const angle = (i / particleCount) * Math.PI * 2;
+                const speed = Math.random() * 8 + 2;
+                const fireworkParticle = document.createElement('div');
+
+                fireworkParticle.style.position = 'absolute';
+                fireworkParticle.style.left = `${x}px`;
+                fireworkParticle.style.top = `${y}px`;
+                fireworkParticle.style.width = `${Math.random() * 4 + 2}px`;
+                fireworkParticle.style.height = `${Math.random() * 4 + 2}px`;
+                fireworkParticle.style.borderRadius = '50%';
+                fireworkParticle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                fireworkParticle.style.opacity = '1';
+                fireworkParticle.style.pointerEvents = 'none';
+                fireworkParticle.style.animation = `firework 1.5s ease-out forwards`;
+
+                document.body.appendChild(fireworkParticle);
+
+                // 动画结束后移除粒子
+                setTimeout(() => {
+                    fireworkParticle.remove();
+                }, 1500);
+
+                // 计算粒子轨迹
+                const dx = Math.cos(angle) * speed;
+                const dy = Math.sin(angle) * speed;
+                let currentX = x;
+                let currentY = y;
+
+                const animateFirework = () => {
+                    currentX += dx;
+                    currentY += dy;
+                    fireworkParticle.style.left = `${currentX}px`;
+                    fireworkParticle.style.top = `${currentY}px`;
+                    fireworkParticle.style.opacity = parseFloat(fireworkParticle.style.opacity) - 0.01;
+
+                    if (parseFloat(fireworkParticle.style.opacity) > 0) {
+                        requestAnimationFrame(animateFirework);
+                    }
+                };
+                animateFirework();
+            }
+        }
+
+        // 烟花动画样式
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes firework {
+                0% { transform: scale(1); opacity: 1; }
+                100% { transform: scale(0); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 窗口大小适配
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initParticles();
+        });
+
+        // 初始化
+        window.onload = () => {
+            initParticles();
+            animateParticles();
+        };
+    </script>
+</body>
+</html>
+    
